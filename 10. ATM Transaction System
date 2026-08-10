@@ -1,0 +1,149 @@
+Create a menu-driven ATM program to check balance, deposit, withdraw and exit. Prevent withdrawals when the balance is insufficient and maintain/display the last five transactions.
+#include <stdio.h>
+
+#define MAX_TRANSACTIONS 5
+
+int main() {
+
+    float balance = 0;
+    float amount;
+
+    char transactions[MAX_TRANSACTIONS][100];
+
+    int transactionCount = 0;
+    int choice;
+
+    do {
+
+        printf("\n===== ATM MENU =====\n");
+        printf("1. Check Balance\n");
+        printf("2. Deposit Money\n");
+        printf("3. Withdraw Money\n");
+        printf("4. Display Last Five Transactions\n");
+        printf("5. Exit\n");
+
+        printf("Enter choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+
+            case 1:
+
+                printf("Current Balance: %.2f\n",
+                       balance);
+
+                break;
+
+            case 2:
+
+                printf("Enter deposit amount: ");
+                scanf("%f", &amount);
+
+                if (amount <= 0) {
+                    printf("Invalid amount.\n");
+                    break;
+                }
+
+                balance += amount;
+
+                snprintf(
+                    transactions[
+                        transactionCount %
+                        MAX_TRANSACTIONS
+                    ],
+                    100,
+                    "Deposited: %.2f",
+                    amount
+                );
+
+                transactionCount++;
+
+                printf("Deposit successful.\n");
+                printf("New Balance: %.2f\n",
+                       balance);
+
+                break;
+
+            case 3:
+
+                printf("Enter withdrawal amount: ");
+                scanf("%f", &amount);
+
+                if (amount <= 0) {
+                    printf("Invalid amount.\n");
+                }
+                else if (amount > balance) {
+
+                    printf("Insufficient balance.\n");
+                }
+                else {
+
+                    balance -= amount;
+
+                    snprintf(
+                        transactions[
+                            transactionCount %
+                            MAX_TRANSACTIONS
+                        ],
+                        100,
+                        "Withdrawn: %.2f",
+                        amount
+                    );
+
+                    transactionCount++;
+
+                    printf("Withdrawal successful.\n");
+                    printf("Remaining Balance: %.2f\n",
+                           balance);
+                }
+
+                break;
+
+            case 4:
+
+                printf("\n===== LAST FIVE TRANSACTIONS =====\n");
+
+                if (transactionCount == 0) {
+                    printf("No transactions yet.\n");
+                }
+                else {
+
+                    int start;
+
+                    if (transactionCount >
+                        MAX_TRANSACTIONS) {
+
+                        start = transactionCount -
+                                MAX_TRANSACTIONS;
+                    }
+                    else {
+                        start = 0;
+                    }
+
+                    for (int i = start;
+                         i < transactionCount;
+                         i++) {
+
+                        printf("%s\n",
+                               transactions[
+                                   i % MAX_TRANSACTIONS
+                               ]);
+                    }
+                }
+
+                break;
+
+            case 5:
+
+                printf("Thank you for using the ATM.\n");
+                break;
+
+            default:
+
+                printf("Invalid choice.\n");
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
